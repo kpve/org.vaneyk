@@ -1,0 +1,61 @@
+
+.menu
+{
+             float: left;;
+           display: table;
+         position: relative;
+    padding-right: 2em;
+     margin-right: 1em;
+}
+
+.menu > .menu-header
+{
+}
+
+.menu > .menu-header > .menu-label
+{
+}
+
+.menu > .menu-header > .menu-label > .menu-label-value
+{
+    display: none;
+      color: #FFFFFF;
+}
+
+.menu > .menu-items
+{
+      display: none;
+    font-size: 75%;
+     position: absolute;
+      z-index: 999;
+}
+
+.menu > .menu-items > .menu-item
+{
+    color: #FFFFFF;
+}
+
+.vertical-sliding-menu > .menu-items
+{
+            width: 150px;
+             padding: 5px 18px;
+           margin: 0;
+    margin-bottom: 5px;
+            color: #FFFFFF;
+}
+
+.vertical-sliding-menu > .menu-items > .menu-item
+{
+            width: 150px;
+             padding: 5px 18px;
+           margin: 0;
+    margin-bottom: 5px;
+            color: #FFFFFF;
+}
+
+.vertical-sliding-menu > .menu-items > .menu-item
+{
+    white-space: nowrap;
+}
+
+

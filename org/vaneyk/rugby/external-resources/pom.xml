@@ -1,0 +1,125 @@
+<project 
+    xmlns             ="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi         ="http://www.w3.org/2001/XMLSchema-instance"
+     
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0    http://maven.apache.org/maven-v4_0_0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.vaneyk.rugby</groupId>
+        <artifactId>rugby-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+
+    <artifactId>rugby-external-resources</artifactId>
+<!--  TODO revisit packaging for this module -->
+    <packaging>jar</packaging>
+    
+    <profiles>
+        <profile>
+            <id>install-external-resources</id>
+            <activation>
+                <!-- NOTE: For most applications copying the external resources to the standard install directory is pretty light, so we make
+                           this profile opt-out to ensure the latest content is always used when the application is running.
+                           
+                           If your application has large external resource files consider changing this to an opt-in behavior with the consequence
+                           that devs will need to be conscious of invoking it when they change their external resources or the application will
+                           not pick up the changes.
+                -->
+                <property>
+                    <name>!skip-install-external-resources</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-external-resources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <echo />
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo>                      INSTALLING APPLICATION                        </echo>
+                                        <echo>   version location: ${application.install.version.location}</echo>
+                                        <echo>   current location: ${application.install.current.location}</echo>
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo />
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+                                        
+                                        <!-- first delete the "current" directory in case it's an actual directory (it shouldn't be, but just in case) -->
+                                        <delete dir="${application.install.current.location}" failonerror="true" />
+                                        <!-- then delete the "current" symlink (which it should be) -->
+                                        <if>
+                                            <os family="windows" />
+                                            <then>
+<!-- TODO windows docs recommend using rmdir to delete symlinks but this is failing, revisit - on windows os we create an actual directory and copy files over from the version dir :( 
+ ß                                               <exec executable="rmdir" dir="${application.install.location}" >
+                                                    <arg value="/Q" />
+                                                    <arg value="${application.install.current.location}"  />
+                                                </exec>
+-->
+                                            </then>
+                                            <else>
+                                                <symlink link="${application.install.current.location}" resource="${application.install.version.location}" action="delete" failonerror="true" />
+                                            </else>
+                                        </if>
+                                        
+                                        <!-- delete and recreate the install directory    NOTE: we have to create the directory in the event it doesn't exist so we can fail on error (otherwise deleting the link fails because it doesn't exist) -->
+                                        <echo>Cleaning install directory:         </echo>
+                                        <mkdir  dir="${application.install.version.location}" />
+                                        <delete dir="${application.install.version.location}" failonerror="true" includeemptydirs="true" >
+                                            <!-- NOTE: we exclude the application war file because the web module handles installing it -->
+                                            <exclude name="application/*.war" />
+                                        </delete>
+                                        <mkdir  dir="${application.install.version.location}" />
+
+                                        <!-- copy external resources to the install directory -->
+                                        <echo>Copying external resources:         </echo>
+                                        <copy todir="${application.install.version.location}" includeEmptyDirs="true" >
+                                            <fileset dir="${basedir}/../external-resources/target/classes/package/${application.install.package}" />     
+                                        </copy>
+                                        
+                                        <!-- make the this version of the application "current" -->
+                                        <if>
+                                            <os family="windows" />
+                                            <then>
+<!-- TODO revisit getting windows symlinks to work here, for now we just copy the version contents into current :o
+                                                <exec executable="mklink" >
+                                                    <arg value="/d" />
+                                                    <arg value="${application.install.current.location}" />
+                                                    <arg value="${application.install.version.location}" />
+                                                </exec>
+-->
+<echo>Using work-around for windows symlinks, copying installed version contents to current directory which adds time to the build :(         </echo>
+<copy todir="${application.install.current.location}" >
+            <fileset dir="${application.install.version.location}" /> 
+</copy>
+                                            </then>
+                                            <else>
+                                                <symlink link="${application.install.current.location}" resource="${application.install.version.location}" action="single" failonerror="true" />
+                                            </else>
+                                        </if>
+                                        
+                                        <echo />
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

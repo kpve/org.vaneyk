@@ -1,0 +1,68 @@
+<project 
+    xmlns             ="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi         ="http://www.w3.org/2001/XMLSchema-instance"
+     
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0    http://maven.apache.org/maven-v4_0_0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.vaneyk.rugby</groupId>
+        <artifactId>rugby-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+
+    <artifactId>rugby-service</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rugby-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rugby-contract</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${version.cxf}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>${version.cxf}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${version.cxf}</version>
+        </dependency>
+<!-- 
+        <dependency>
+            <groupId>org.vaneyk.commons</groupId>
+            <artifactId>vaneyk-commons-debug</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+-->        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+<!-- 
+        <dependency>
+            <groupId>org.vaneyk.commons</groupId>
+            <artifactId>commons-spring-web</artifactId>
+        </dependency>
+-->
+    </dependencies>
+
+</project>

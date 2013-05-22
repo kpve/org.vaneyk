@@ -1,0 +1,46 @@
+
+.perspective-actions
+{
+       display: table;
+         float: left;
+        margin: 0 5em 0 0;
+    text-align: right;
+}
+
+.perspective-actions .perspective-action
+{
+     margin: 4em auto;
+}
+
+.perspective-component-forms > .form
+{
+    display: none;
+}
+
+.action-subaction-select-form-left
+{
+         float: left;
+         width: 40%;
+    margin-top: 2em;
+}
+
+.action-subaction-select-form-right
+{
+          float: left;
+          width: 40%;
+     margin-top: 2em;
+    margin-left: 2em;
+}
+
+#hiddenReusableFormElements
+{
+    display: none;
+}
+
+/* NOTE: width 1px is need for this element to condense it's size to it's content - other approaches didn't seem to work... */
+.action-bulk-delete-subaction-action-form-submit
+{
+    display: block;
+     margin: auto;
+      width: 1px;
+}
