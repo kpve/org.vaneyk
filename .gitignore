@@ -1,0 +1,19 @@
+# operating system
+##################
+.DS_Store
+
+
+# ide 
+#####
+*.project
+*.classpath
+*.iml
+*.iws
+bin/
+
+# maven 
+######################
+target/
+.settings/
+
+

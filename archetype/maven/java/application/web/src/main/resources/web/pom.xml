@@ -1,0 +1,218 @@
+<project 
+    xmlns             ="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi         ="http://www.w3.org/2001/XMLSchema-instance"
+     
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0    http://maven.apache.org/maven-v4_0_0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>~~~{archetype.new-project.maven-group-id}.~~~{archetype.new-project.name}</groupId>
+        <artifactId>~~~{archetype.new-project.name}-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+
+    <artifactId>~~~{archetype.new-project.name}-web</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <jetty.port>9090</jetty.port>
+        <jetty.sslport>9443</jetty.sslport>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>~~~{archetype.new-project.maven-group-id}.~~~{archetype.new-project.name}.install-application</id>
+            <activation>
+                <!-- NOTE: Unlike the external resources module, this module does not automatically install here because the jetty plugin runs
+                           the application from source directories making which makes the potentially slow copying of the war to the standard 
+                           install directory unnecessary. 
+                 -->
+                <property>
+                    <name>install-application</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-application</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <echo />
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo>                      INSTALLING APPLICATION                        </echo>
+                                        <echo>   version location: ${application.install.version.location}</echo>
+                                        <echo>   current location: ${application.install.current.location}</echo>
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo />
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+                                        <!-- delete the "current" application version link   NOTE: we have to create the directory in the event it doesn't exist so we can fail on error (otherwise deleting the link fails because it doesn't exist) -->
+                                        <mkdir dir="${application.install.current.location}" />
+                                        <if>
+                                            <os family="windows" />
+                                            <then>
+<!-- TODO windows docs recommend using rmdir to delete symlinks but this is failing, revisit - using ant delete task for now 
+                                                <exec executable="rmdir" dir="${application.install.location}" >
+                                                    <arg value="/Q" />
+                                                    <arg value="${application.install.current.location}"  />
+                                                </exec>
+-->
+<delete dir="${application.install.current.location}" failonerror="true" />
+                                            </then>
+                                            <else>
+                                                <symlink link="${application.install.current.location}" resource="${application.install.version.location}" action="delete" failonerror="true" />
+                                            </else>
+                                        </if>
+                                        
+                                        <!-- delete and recreate the install directory    NOTE: we have to create the directory in the event it doesn't exist so we can fail on error (otherwise deleting the link fails because it doesn't exist) -->
+                                        <echo>Cleaning install directory:         </echo>
+                                        <mkdir  dir="${application.install.version.location}" />
+                                        <delete dir="${application.install.version.location}" failonerror="true" includeemptydirs="true" >
+                                            <!-- NOTE: we only include the application war file because the external resources module is responsible for installing everything else -->
+                                            <include name="application/*.war" />
+                                        </delete>
+                                        <mkdir  dir="${application.install.version.location}" />
+                                        
+                                        <!-- copy the application to the install directory -->
+<!-- TODO make the war file name more specific here -->
+                                        <echo>Copying application:         </echo>
+<!-- TODO change the war name to not include "-web" (change this in the web module's pom) -->
+                                        <copy todir="${application.install.version.location}/application" file="${basedir}/../web/target/~~~{archetype.new-project.name}-web-${project.version}.war" />
+                                        
+                                        <!-- make the this version of the application "current" -->
+                                        <if>
+                                            <os family="windows" />
+                                            <then>
+<!-- TODO revisit getting windows symlinks to work here, for now we just copy the version contents into curren :o
+                                                <exec executable="mklink" >
+                                                    <arg value="/d" />
+                                                    <arg value="${application.install.current.location}" />
+                                                    <arg value="${application.install.version.location}" />
+                                                </exec>
+-->
+<echo>Using work-around for windows symlinks, copying installed version contents to current directory which adds time to the build :(         </echo>
+<copy todir="${application.install.current.location}" >
+            <fileset dir="${application.install.version.location}" /> 
+</copy>
+                                            </then>
+                                            <else>
+                                                <symlink link="${application.install.current.location}" resource="${application.install.version.location}" action="single" failonerror="true" />
+                                            </else>
+                                        </if>
+                                        
+                                        <echo />
+                                        <echo>--------------------------------------------------------------------</echo>
+                                        <echo />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>~~~{archetype.new-project.maven-group-id}.~~~{archetype.new-project.name}.web.start-webapp</id>
+            <activation>
+                <property>
+                    <name>start-webapp</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <daemon>false</daemon>
+                                    <!-- configure unsecure and secure ports -->
+                                    <connectors>
+                                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                                            <port>${jetty.port}</port>
+                                            <maxIdleTime>60000</maxIdleTime>
+                                        </connector>
+                                        <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+                                            <port>${jetty.sslport}</port>
+                                            <keystore>${basedir}/../external-resources/target/classes/package/dev-sandbox/configuration/ssl/keystore.jks</keystore>
+                                            <keyPassword>changeit</keyPassword>
+                                            <password>changeit</password>
+                                        </connector>
+                                    </connectors>
+                                    <systemProperties>
+                                        <systemProperty>
+                                            <!-- enable jmx agent -->
+                                            <name>com.sun.management.jmxremote</name>
+                                            <value />
+                                        </systemProperty>
+                                    </systemProperties>
+                                    <!-- set web app context path -->
+                                    <webAppConfig>
+                                        <contextPath>/~~~{archetype.new-project.name}</contextPath>
+                                    </webAppConfig>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-jetty</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                                <configuration>
+                                    <stopPort>9091</stopPort>
+                                    <stopKey>test</stopKey>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>~~~{archetype.new-project.name}-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+<!-- 
+        <dependency>
+            <groupId>com.expedia.commons</groupId>
+            <artifactId>com.expedia-commons-servlet</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.expedia.commons</groupId>
+            <artifactId>com.expedia-commons-spring-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+    </dependencies>
+
+    
+</project>
+

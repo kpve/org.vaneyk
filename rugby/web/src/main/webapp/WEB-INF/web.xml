@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+    xmlns:xsi         ="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns             ="http://java.sun.com/xml/ns/javaee"
+    xmlns:web         ="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                        http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="services"
+    version           ="2.5"
+>
+    
+    <display-name>rugby</display-name>
+     
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- NOTE: this is a spring default but to demystify things we explicitly provide it -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+
+    <!--  NOTE: this property turns off spring's org.springframework.web.util.Log4jWebConfigurer web app root feature (java docs for details)
+                which has some negative side effects in some containers (such as tomcat.)  The negative side effect we have seen most often
+                is multiple web apps in a container have a collision with a default value a property called webapp.root and fail to start up.
+                
+                if you use org.vaneyk.archetype.maven.java.application.web.commons.springweb.config.Log4jConfigListener instead of org.springframework.web.util.Log4jWebConfigurer
+                you don't technically need this property but we leave it in the archetype as it causes no harm and will prevent re-discovery 
+                of the underlying issue if a particular app chooses to use the spring listener instead.
+     -->
+    <context-param>
+        <param-name>log4jExposeWebAppRoot</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>CXFServlet</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CXFServlet</servlet-name>
+        <url-pattern>/service/1.0/*</url-pattern>
+    </servlet-mapping>
+    
+</web-app>
+

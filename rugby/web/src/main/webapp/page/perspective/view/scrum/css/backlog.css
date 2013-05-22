@@ -1,0 +1,44 @@
+#backlog-content
+{
+	width: 100%;
+}
+
+#backlog-content fieldset
+{
+	width: 100%;
+}
+
+.backlog-content-priority
+{
+	width: 5%;
+}
+
+.backlog-content-title
+{
+	width: 40%;
+}
+
+.backlog-content-estimate
+{
+	width: 7%;
+}
+
+.backlog-content-theme
+{
+	width: 8;
+}
+
+.backlog-content-edit
+{
+	width: 10%;
+}
+
+.backlog-content-description
+{
+    width: 30%;
+}
+
+.backlog-content-field
+{
+    width: 99%;
+}

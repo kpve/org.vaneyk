@@ -1,0 +1,9 @@
+<!-- NOTE:
+       - this file may not be need if your repository does not require authentication or if you don't mind have your password in the settings.xml file in clear text ;)
+       - see maven instructions for how to:  http://maven.apache.org/guides/mini/guide-encryption.html
+-->
+<settingsSecurity>
+    <master>[TODO your encryopted master password goes here]</master>
+</settingsSecurity>
+
+

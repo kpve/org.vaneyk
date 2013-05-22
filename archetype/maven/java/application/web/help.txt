@@ -1,0 +1,35 @@
+
+
+*********************************************************************************
+
+Instructions:
+
+    1) Check out the archetype (assumed to be in location [archetype home] for
+       the rest of the instructions.)
+    
+    2) Make sure your maven client is configured to point to expedia's repositories
+
+    3) Run the archetype:
+
+       cd [archetype home] 
+       mvn clean package -Darchetype.new-project.maven-group-id=[group id] -Darchetype.new-project.name=[name]
+       
+       
+       NOTE: The archetype depends on the corporate pom com.expedia:corporate-parent.
+             If you have network connectivity to corporate-central this dependency
+             will be downloaded to your local repository by maven automatically.
+             If you do not have network connectivity to corporate-central you can
+             check out corporate pom project and build it locally to get it into
+             your local repository.
+
+    4) Start using the new project:
+    
+       copy [archetype home]\target\myProjectName [myWorkspace]\myProjectName       
+       cd [myWorkspace]\myProjectName
+       mvn validate -Dhelp
+       
+    5) Follow the help instructions for the new project, that's it :)
+       
+    
+*********************************************************************************
+

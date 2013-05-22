@@ -1,0 +1,28 @@
+ Getting started:
+
+1) Install maven:
+    
+    http://maven.apache.org/download.html#Installation
+
+2) Configure maven to use the expedia-central repository:
+
+    NOTE: the user/password steps portion of the steps are only necessary if the expedia repositories are configured to require authentication.  While
+          this may change in the future, they are currently only require authentication to deploy artifacts (read access is anonymous.) 
+
+    a) Create a secure password:
+
+       - copy settings-security.xml to [user home]/.m2/security-settings.xml
+       - replace the [TOODO...] placeholders in this file with a master password hash by following maven's instructions: http://maven.apache.org/guides/mini/guide-encryption.html
+    
+    b) Create a maven server configuration:
+
+       - copy settings.xml to [user home]/.m2/settings.xml
+       - replace the [TODO...] placeholders in this file with your user id and encrypted password by following maven's instructions: http://maven.apache.org/guides/mini/guide-encryption.html
+
+    c) Get the source code for your project and build:
+
+       - git clone ....
+       - cd project root
+       - mvn validate
+       - follow the instructions provided for the project :)  (the expedia standard is to provide build instructions/help when "mvn validate" is run)  
+

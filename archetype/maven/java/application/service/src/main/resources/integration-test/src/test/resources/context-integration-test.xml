@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+    <!-- load integration test properties    NOTE: this should be done BEFORE any other spring wirings because they may need this information -->
+    <bean id="com_expedia_service_userreviews_loaderservice_propertiesPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
+        <property name="systemPropertiesModeName"       value="SYSTEM_PROPERTIES_MODE_OVERRIDE"                    />
+        <property name="ignoreResourceNotFound"         value="false"                                              />
+        <property name="ignoreUnresolvablePlaceholders" value="false"                                              />
+        <property name="order"                          value="0"                                                  />
+        <property name="locations" >
+            <list>
+                <value>classpath*:integration-test.default.properties</value>
+                <value>file:${application.install.location}/current/configuration/integration-test.override.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- test specific wirings go here -->
+<!--  TODO delete the "HelloWorldRestServiceIntegrationTest" wiring as it is just for demonstration in the archetype  -->
+    <bean id="com_expedia_archetype_maven_java_application_service_HelloWorldRestServiceIntegrationTest_setTestData" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" >
+        <property name="targetClass" >
+            <value>com.expedia.archetype.maven.java.application.service.HelloWorldRestServiceIntegrationTest</value>
+        </property>
+        <property name="targetMethod" >
+            <value>setTestData</value>
+        </property>
+<!--  TODO
+        <property name="arguments" >
+            <list>
+                <value>${com_expedia_archetype_maven_java_application_service_HelloWorldRestServiceIntegrationTest_helloWorldRestServiceUri}</value>
+                <value>${com_expedia_archetype_maven_java_application_service_HelloWorldRestServiceIntegrationTest_helloMessage}</value>
+                <value>${com_expedia_archetype_maven_java_application_service_HelloWorldRestServiceIntegrationTest_worldMessage}</value>
+            </list>
+        </property>
+-->
+    </bean>
+    <bean id="com_expedia_archetype_maven_java_application_service_HelloWorldRestServiceIntegrationTest" class="com.expedia.archetype.maven.java.application.service.HelloWorldRestServiceIntegrationTest" >
+    </bean>
+
+</beans>

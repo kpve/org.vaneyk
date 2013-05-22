@@ -1,0 +1,203 @@
+@import url( "menu.css"  );
+@import url( "slide.css" );
+
+/* TODO not sure why but with html 5 (<!DOCTYPE html>) pages don't use the full screen without the html and body elements having style height 100% */
+html
+{
+     height: 100%;
+    z-index: 0;
+}
+
+body
+{
+  position: relative;
+   z-index: 1;
+    height: 100%;
+    margin: 0em auto;
+}
+
+input
+{
+          text-align: center;
+    background-color: rgba( 204, 204, 204, 0.5 );
+       border-radius: 0.3em;
+}
+
+textarea
+{
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#body
+{
+        background: -moz-radial-gradient(80% 20% , white, rgba( 0, 0, 0, 0.2 ) 75%) repeat scroll 0 0 transparent;
+           display: none;
+            height: 100%;
+       font-family: sans-serif;
+    text-transform: uppercase;
+         font-size: 75%;
+             color: #000000;
+           padding: 1em;
+}
+
+/* TODO useful for debugging styles :)
+div
+{
+    border: 1px solid black;
+}
+*/
+
+fieldset
+{
+             margin: 1em;
+            padding: 1em;
+      border-radius: 0.3em;
+    background-clip: padding-box;    
+             border: 1px solid rgba( 0, 0, 0, 0.2 );
+             margin: auto;
+              width: 1%;  /* NOTE this seems to force the fieldset to size to its content */
+}
+
+table.data
+{
+              width: 100%;
+    border-collapse: collapse;
+        white-space: nowrap;
+}
+
+table.data tbody tr:nth-child(odd)
+{
+    background-color: rgba( 204, 204, 204, 0.5 );
+}
+
+table.data tbody tr:nth-child(even), table.data tbody tr:last-of-type
+{
+    background-color: transparent;
+}
+
+
+
+.content
+{
+    text-transform: none;
+}
+
+.vertical-spacer-center
+{
+    height: 33%;
+}
+
+/* forces elements with floated children to contain them */
+.containFloatedChildren______TODO_SEEMS_TO_BREAK_THINGS
+{
+    overflow: hidden;
+}
+
+.form
+{
+    display: table;
+}
+
+.form .form-row
+{
+    display: table-row;
+}
+
+.form-field-label
+{
+        display: table-cell;
+        padding: .2em;
+    white-space: nowrap;
+}
+
+.form-field-input
+{
+       display: table-cell;
+       padding: .2em;
+    text-align: center;
+}
+
+.form-actions > .form-field-input
+{
+    padding: .5em;
+}
+
+.form-field-action
+{
+}    
+
+.inline-right-layout
+{
+     margin-right: 15px;
+    padding-right: 15px;
+}
+
+.classic-form
+{
+    display: table-cell;
+}
+
+.classic-form .form-row
+{
+    text-align: right;
+}
+
+.tabular-form .form-row
+{
+    display: table-row;
+}
+
+.tabular-form > .tabular-form-header 
+{
+       display: table-row;
+    text-align: center;
+}
+
+.tabular-form .form-field-label, .tabular-form .form-field-input
+{
+    text-align: center;
+}
+
+/* bit of a hack here - styles aren't being applied as desired to span and input elements on tabular forms,
+   so a bit of brute force to rectify :(  revisit this when cross browser support is added
+*/
+.tabular-form .form-field-input input
+{
+    text-align: center;
+}
+
+.tabular-form > .form-actions
+{
+    display: block;
+      width: 500%;
+}
+
+.tabular-form > .form-actions > .form-field-input
+{
+    display: block;
+     margin: 0 auto;
+}
+
+.tabular-form .form-submit-row
+{
+         margin: auto;
+         margin: 1em auto;
+    padding-top: 2em;
+}
+
+/* NOTE: we want the submit/cancel row to be distinguished by a little extra top space,
+         but table rows can't be padded so this adds top padding to the row's children */
+.tabular-form .form-submit-row > *
+{
+     padding-top: 2em;
+}
+
+.component
+{
+    display: none;
+}
+
+.form table
+{
+    margin: 0em auto;
+}
