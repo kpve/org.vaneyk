@@ -1,0 +1,30 @@
+@import url( "page.css" );
+
+#header
+{
+    padding: .7em;
+}
+
+/* NOTE: CSS attribute value selectors do not support not equals yet, so we turn off all menus here and then turn on the main menus with a second selector */
+#header > .menu
+{
+    display: none;
+}
+
+#header > .menu[data-menuType=main]
+{
+    display: table;
+}
+
+#header input
+{
+    border: 0px;
+    padding: 0px;
+}    
+
+#perspective-content
+{
+    padding: 3em;
+     margin: 0px auto;
+}
+

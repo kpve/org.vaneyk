@@ -1,0 +1,584 @@
+<project 
+    xmlns             ="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi         ="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0           http://maven.apache.org/xsd/maven-4.0.0.xsd" 
+>
+     <!-- NOTE: 
+         This pom file is the root of the corporate project object model inheritance chain.  It contains standard information and behaviors         
+         most corporate projects should use to promote standardization, consistency, compatibility and so on.  These are nice things but there are
+         limits to what can be achieved without becoming overbearing on project implementations (heavy, constrictive etc.) The goal should be
+         to provide core value but allow project the flexibility to do deviate and supplement with good reason.  
+         
+         Some of the more important things included are:
+           - common third party dependency versions: This is only for commonly used or wide impacting third party dependencies. Things like apache commons, junit, spring, jaxb, or 
+                                                     libraries that impact compatibility across code bases (think serialization, caching etc.)
+                                                     This is nice because it creates a foundation for common behavior, compatibility, etc across corporate code bases.
+           - maven plugin configurations           : This is nice because it helps create standard projects that look and act the same that everyone can work with pretty easily :)
+           - maven profiles                        : Same as maven plugin configs...
+           
+         Some important things that are NOT included are:
+           - first party dependency versions:  including them here would create a circular dependency! not fun.
+         
+         Some important nuances/patterns to keep in mind/follow:
+           - profiles id's are name spaced  : Why? because maven treats profiles different from other aspects of a pom. Specifically, profiles are not inherited!
+                                              If you define a profile with the same id in a parent and a child pom BOTH will be invoked (parent fist then child).
+     
+         TODO more hot air goes here LOL....
+     -->
+    
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.expedia</groupId>
+    <artifactId>expedia-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+       <!-- make build portable, see maven faqß for more info -->
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- third party dependency versions -->
+        <version.log4j>1.2.16</version.log4j>
+        <version.slf4j>1.6.4</version.slf4j>
+        <version.junit>4.8.2</version.junit>
+        <version.testng>6.8</version.testng>
+        <version.spring>3.1.2.RELEASE</version.spring>
+        <version.javax-servlet>3.0.1</version.javax-servlet>
+        <version.cxf>2.5.2</version.cxf>
+        <version.commons-lang>2.6</version.commons-lang>
+        <version.commons-io>1.2</version.commons-io>
+        <version.commons-httpclient>3.1</version.commons-httpclient>
+        <version.jsr311>1.1.1</version.jsr311>
+        <version.mockito>1.9.0</version.mockito>
+        <version.jaxb2>0.5.2</version.jaxb2>
+<!--  TODO revisit jaxb2 basics to see if we can get consistent version across all of its disparate libraries... -->        
+        <version.jaxb2-plugin>0.7.2</version.jaxb2-plugin>
+        <version.jaxb2-basics>0.6.4</version.jaxb2-basics>
+        <version.jaxb2-commons-lang>2.3</version.jaxb2-commons-lang>
+        <version.cglib>2.2.2</version.cglib>
+        <version.thrift>0.9.0</version.thrift>
+        <version.ant-contrib>1.0b3</version.ant-contrib>
+        
+        <!-- behaviors -->
+        <!--     corporate  -->
+        <corporate.install.location>/application</corporate.install.location>
+        <mvn.repository.expedia-snapshots.url>http://nexus.sb.karmalab.net/nexus/content/repositories/snapshots/</mvn.repository.expedia-snapshots.url>
+        <mvn.repository.expedia-releases.url>http://nexus.sb.karmalab.net/nexus/content/repositories/releases/</mvn.repository.expedia-releases.url>
+        <mvn.repository.expedia-central.url>http://nexus.sb.karmalab.net/nexus/content/repositories/central/</mvn.repository.expedia-central.url>
+        <!--     project -->        
+        <project.build.dependency-directory>${project.build.directory}/dependency/</project.build.dependency-directory>
+        <project.build.dependency.cache-directory>${project.build.directory}/dependency/cache</project.build.dependency.cache-directory>
+        <project.build.dependency.report-list-file>${project.build.dependency-directory}/dependency.list.txt</project.build.dependency.report-list-file>
+        <project.build.dependency.report-tree-file>${project.build.dependency-directory}/dependency.tree.txt</project.build.dependency.report-tree-file>
+        
+        <!--     profiles NOTE: profiles using naming to prevent collisions with child projects since maven profiles are not cumulative and can't be overridden -->   
+        <com.expedia.parent.compile-resources.profile-activation>true</com.expedia.parent.compile-resources.profile-activation>    <!-- NOTE: most projects will want this profile to run but for those that don't (such as archetypes that have special resource copying/filtering rules) set this property to false -->
+    </properties>
+
+    <!-- point all deploy requests at our internal repository -->
+    <distributionManagement>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>expedia-snapshots</id>
+            <name>expedia-snapshots</name>
+            <url>${mvn.repository.expedia-snapshots.url}</url>
+            <layout>default</layout>
+        </snapshotRepository>
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>expedia-releases</id>
+            <name>expedia-releases</name>
+            <url>${mvn.repository.expedia-releases.url}</url>
+        </repository>
+    </distributionManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>expedia-central</id>
+            <name>corporate mirror of maven central</name>
+            <url>${mvn.repository.expedia-central.url}</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${version.javax-servlet}</version>
+            </dependency>            
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib-nodep</artifactId>
+                <version>${version.cglib}</version>
+            </dependency>            
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${version.commons-lang}</version>
+            </dependency> 
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons-io}</version>
+            </dependency> 
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${version.commons-httpclient}</version>
+            </dependency>
+           <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${version.jsr311}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.jaxb2_commons</groupId>
+                <artifactId>jaxb2-basics</artifactId>
+                <version>${version.jaxb2-basics}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.jaxb2_commons</groupId>
+                <artifactId>jaxb2-commons-lang</artifactId>
+                <version>${version.jaxb2-commons-lang}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.jaxb2_commons</groupId>
+                <artifactId>jaxb2-basics-runtime</artifactId>
+                <version>${version.jaxb2-basics}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${version.testng}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${version.mockito}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>    
+    
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>        
+        </testResources>        
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>help</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <target>
+                                <concat>
+                                    <fileset file="help.txt" />
+                                </concat>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <includeEmptyDirs>true</includeEmptyDirs>
+                        <nonFilteredFileExtensions>
+                            <!-- maven filtering can unintentionally change the contents of binary files, so list file extensions to exclude here -->
+                            <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                            <nonFilteredFileExtensions>jpg</nonFilteredFileExtensions>
+                            <nonFilteredFileExtensions>jpeg</nonFilteredFileExtensions>
+                            <nonFilteredFileExtensions>png</nonFilteredFileExtensions>
+                            <nonFilteredFileExtensions>gif</nonFilteredFileExtensions>
+                            <nonFilteredFileExtensions>pdf</nonFilteredFileExtensions>
+                        </nonFilteredFileExtensions>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>copy-src-main-resources-to-classes</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.sourceDirectory}</directory>
+                                        <excludes>
+                                            <exclude>**/*.java</exclude>
+                                        </excludes>
+                                    </resource>
+                                </resources>
+                                <includeEmptyDirs>true</includeEmptyDirs>
+                                <overwrite>true</overwrite>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>copy-src-test-resources-to-test-classes</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.testSourceDirectory}</directory>
+                                        <excludes>
+                                            <exclude>**/*.java</exclude>
+                                        </excludes>
+                                    </resource>
+                                </resources>
+                                <includeEmptyDirs>true</includeEmptyDirs>
+                                <overwrite>true</overwrite>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.12</version>
+                    <configuration>
+                        <!-- white list just UnitTest pattern so we don't have to black list everything else - such as IntegrationTest, PerformanceTest etc.  :) -->
+                        <includes>
+                            <include>**/*UnitTest.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <!-- see:
+                         https://maven-jaxb2-plugin.dev.java.net/docs/guide.html
+                         https://maven-jaxb2-plugin.dev.java.net/docs/guide.html#JAXB2Plugins
+                    -->                
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>${version.jaxb2-plugin}</version>
+                    <executions>
+                        <execution>
+                            <id>generate_java_from_xsd</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <schemaDirectory>src/main/resources/xsd</schemaDirectory>
+                                <generateDirectory>${project.build.directory}/generated-sources</generateDirectory> 
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <bindingDirectory>${project.basedir}/src/main/jaxb</bindingDirectory>
+                        <strict>true</strict>
+                        <verbose>true</verbose>
+                        <extension>true</extension>
+                        <args>
+<!--  TODO jaxb commons dependencies need to be cleaned up, until them these features won't work
+                            <arg>-Xannotate</arg><!~~ see: http://confluence.highsource.org/display/J2B/Annotate+Plugin ~~>
+                            <arg>-XtoString</arg><!~~ see: http://confluence.highsource.org/display/J2B/JAXB2+Basics+Plugins ~~>
+                            <arg>-Xequals</arg><!~~ see: http://confluence.highsource.org/display/J2B/JAXB2+Basics+Plugins ~~>
+                            <arg>-XhashCode</arg>                <!~~ see: http://confluence.highsource.org/display/J2B/JAXB2+Basics+Plugins ~~>
+                            <arg>-Xcopyable</arg>                <!~~ see: http://confluence.highsource.org/display/J2B/JAXB2+Basics+Plugins ~~>
+                            <arg>-Xfluent-api</arg>                 <!~~ see: https://jaxb2-commons.dev.java.net/fluent-api/ ~~>
+                            <arg>-Xvalue-constructor</arg>                <!~~ https://jaxb2-commons.dev.java.net/value-constructor/ ~~>
+                            <arg>-Xcollection-setter-injector</arg>       <!~~ https://jaxb2-commons.dev.java.net/collection-setter-injector/ ~~>
+-->                            
+                        </args>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.jvnet.jaxb2_commons</groupId>
+                                <artifactId>jaxb2-basics</artifactId>
+                                <version>${version.jaxb2}</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.jvnet.jaxb2_commons</groupId>
+                                <artifactId>jaxb2-basics-annotate</artifactId>
+                                <version>${version.jaxb2}</version>
+                            </plugin>
+<!--  TODO can't seem to find this in maven central any more                     
+                            <plugin>
+                                <groupId>net.java.dev.jaxb2-commons</groupId>
+                                <artifactId>jaxb-value-constructor</artifactId>
+                                <version>1.7.1</version>
+                            </plugin>
+-->
+<dependency>
+    <groupId>org.jvnet.jaxb2_commons</groupId>
+    <artifactId>jaxb2-value-constructor</artifactId>
+    <version>3.0</version>
+</dependency>
+<!--  TODO can't seem to find this in maven central any more
+                            <plugin>
+                                <groupId>net.java.dev.jaxb2-commons</groupId>
+                                <artifactId>jaxb-fluent-api</artifactId>
+                                <version>2.2</version>
+                            </plugin>
+-->
+<dependency>
+    <groupId>org.jvnet.jaxb2_commons</groupId>
+    <artifactId>jaxb2-fluent-api</artifactId>
+    <version>3.0</version>
+</dependency>
+<!--  TODO can't seem to find this in maven central any more
+                            <plugin>
+                                <groupId>net.java.dev.jaxb2-commons</groupId>
+                                <artifactId>collection-setter-injector</artifactId>
+                                <version>2.1.1</version>
+                            </plugin>
+-->                            
+                        </plugins>
+                    </configuration>
+                    <dependencies>
+                        <!-- Add libraries containing annotations we will be using here: -->
+                        <dependency>
+                            <groupId>javax.persistence</groupId>
+                            <artifactId>persistence-api</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>                    
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-nodeps</artifactId>
+                            <version>1.8.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>${version.ant-contrib}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>8.1.7.v20120910</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>com.expedia.parent.dependency-support</id>
+            <activation>
+                <property>
+                    <name>dependency-support</name>
+                </property>
+<!--  TODO consider using missing dir in addition to property so that this runs initially as well as if the dependency cache has been cleaned             
+                <file>
+                    <missing>${project.build.dependency.cache-directory}</missing>
+                </file>
+-->                
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.4.1</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.dependency-directory}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>        
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.2</version>
+                        <executions>
+                            <!--  TODO can the cache-dependencies and cache-depedencies-sources steps be combined? -->
+                            <execution>
+                                <id>cache-dependencies</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.dependency.cache-directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>cache-dependencies-sources</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.dependency.cache-directory}</outputDirectory>
+                                    <classifier>sources</classifier>
+                                    <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>generate-dependency-report-list</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>list</goal>
+                                </goals>
+                                <configuration>
+                                    <outputFile>${project.build.dependency.report-list-file}</outputFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>generate-dependency-report-tree</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>tree</goal>
+                                </goals>
+                                <configuration>
+                                    <outputFile>${project.build.dependency.report-tree-file}</outputFile>
+                                    <outputType>text</outputType>
+                                </configuration>
+                            </execution>                            
+                        </executions>
+                    </plugin>                    
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>com.expedia.parent.publish-sources</id>
+            <activation>
+                <property>
+                    <name>publish-sources</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jar</goal>
+                                    <goal>test-jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>    
+
+</project>
+
