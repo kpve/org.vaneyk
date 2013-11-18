@@ -32,3 +32,20 @@ $.fn.clearForm = function()
         }
     );
 };
+
+/* TODO revisit for easy ".enterkey" event use
+$.fn.enterKey = function( fnc )
+{
+    return this.each( function()
+    		          {
+                          $( this ).keypress( function( event )
+                        		              {
+                                                  var keycode = ( ev.keyCode ? ev.keyCode : ev.which );
+                                                  if( keycode == '13' )
+                                                  {
+                                                      fnc.call( this, event );
+                                                  }
+                                              })
+                     })
+}
+*/

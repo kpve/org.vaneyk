@@ -80,7 +80,6 @@
                     	'change',
                         function()
                         {
-alert( 'delete me - CHANGE!' );
                             // get the product
                             var product = $( this ).attr( 'value' );
                             

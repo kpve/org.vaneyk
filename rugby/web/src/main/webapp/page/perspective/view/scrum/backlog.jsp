@@ -9,23 +9,78 @@
         <jsp:include page="/include/standard-javascript-include.jsp" />
 
         <script type="text/javascript">
-            var bodyOnClickOneTime = false;
-            
+
             $( document ).ready
             (
                 function()
                 {
-                	 $( '#add-new-backlog-item-form-table-row' ).on
-                	 (
-                	     'click',
-                	     function()
-                	     {
-                	         // clone new row
-                	         var cloneOfThisRow = $( this ).closest( '.form-row' ).clone();
-                	         cloneOfThisRow.clearForm();
-                	         cloneOfThisRow.insertBefore( $( this ).closest( '.form' ).find( '.form-actions' ) );
-                	     }
-                	 ); 
+               	    var backlogContent = $( '#backlog-content' );
+                	
+               	    function resetItemPriorities()
+               	    {
+               	    	var index = 1;
+               	    	$( backlogContent ).find( 'input[name="priority"]' ).each
+               	    	(
+               	    	    function()
+               	    		{
+               	    		    $( this ).val( index++ );
+               	    	    }
+               	    	);
+               	    }
+               	    
+                	$( backlogContent ).on
+                    (
+                         'click',
+                         '.insert-item',
+                         function()
+                         {
+                             var formElement = $( this ).closest( '.form' );
+                             
+                             // get item priorities
+                             var currentItemPriority = $( this ).parent().find( 'input:first' ).val();
+                             
+                             // create new row from template and set priority to table order
+                             var newRow = $( "#backlog-item-template" ).clone();
+                             newRow.removeAttr( 'id' );
+                             newRow.insertAfter( $( this ).parents( 'tr' ) );
+                             
+                             resetItemPriorities();
+                         }
+                    ); 
+                    
+                    $( backlogContent ).on
+                    (
+                         'click',
+                         '.remove-item',
+                            function()
+                            {
+                                var formElement  = $( this ).closest( '.form' );
+                                var itemPriority = parseInt( $( this ).parent().find( 'input:first' ).val() );
+                                var itemCount    = $( backlogContent ).find( 'input[name="priority"]' ).length;
+                                var itemRow      = $( this ).closest( 'tr' )
+                             
+                                if( itemPriority == 1 && itemCount < 2 )
+                                {
+                                   $( itemRow ).clearForm();
+                                }
+                                else
+                                {
+                                   $( itemRow ).remove();
+                                }
+                                
+                                resetItemPriorities();
+                            }
+                        );
+                    
+                    // init form if not items exist
+                    if( $( backlogContent ).find( '.form-row-fields' ).length < 1 )
+                    {
+                            // create new row from template and set priority to table order
+                            var newRow = $( "#backlog-item-template" ).clone();
+                            newRow.removeAttr( 'id' );
+                            newRow.find( 'input:first' ).val( 1 );
+                            newRow.insertBefore( $( "#backlog-content" ).find( '.form-actions' ) );
+                    }
                 }
             );
         </script>
@@ -34,62 +89,49 @@
         <div class="vertical-spacer-center" ></div>
         <div id="backlog-content" class="form tabular-form" >
             <fieldset>
-	            <legend>backlog</legend>
-	            <table>
-	                <tr class="form-row" >
-	                    <th class="backlog-content-priority"    >priority</th>
-	                    <th class="backlog-content-title"       >title</th>
-	                    <th class="backlog-content-description" >description</th>
-	                    <th class="backlog-content-estimate"    >estimate</th>
-	                    <th class="backlog-content-theme"       >theme</th>
-	                    <th class="backlog-content-edit"        ></th>
-	                </tr>
-	                <tr class="form-row-fields" >
-	                    <td class="form-field-input" >
-	                        <input type="text" value="" class="backlog-content-field" ></input>
-	                    </td>
-	                    <td class="form-field-input" >
-	                        <input type="text" value="" class="backlog-content-field" ></input>
-	                    </td>
-	                    <td class="form-field-input" >
-	                        <input type="text" value="" class="backlog-content-field" ></input>
-	                    </td>
-	                    <td colspan="0" >
-	                        <input type="text" value="" class="backlog-content-field" ><!-- TODO styliezed type ahead/drop down here --></input>
-	                    </td>
-	                    <td class="form-field-input" >
-	                        <input type="text" value="" class="backlog-content-field" ><!-- TODO styliezed type ahead/drop down here --></input>
-	                    </td>
-	                    <td id="add-new-backlog-item-form-table-row" class="form-field-input"  class="inline-right-layout" >add</td>
-	                    <td>
-	                        <input type="hidden" name="backlog-content-description" ></input>
-	                    </td>
-	                </tr>
-	                <tr class="last-row-in-table" >
-	                    <!-- always leave the last row empty -->
-	                </tr>
-	            </table>            
+                <legend>backlog</legend>
+                <table>
+                    <tr class="form-row" >
+                        <th class="backlog-item-priority"    >priority</th>
+                        <th class="backlog-item-title"       >title</th>
+                        <th class="backlog-item-description" >description</th>
+                        <th class="backlog-item-effort"      >effort</th>
+                        <th class="backlog-item-theme"       >theme</th>
+                        <th class="backlog-item-edit"        ></th>
+                    </tr>
+                    <tr class="form-row form-actions form-submit-row" >
+                        <td class="form-field-input" colspan="100%" >
+                            <span class="form-field-action inline-right-layout" >submit</span>
+                        </td>
+                    </tr>
+                </table>
             </fieldset>
         </div>
  <div id="hiddenReusableFormElements" style="display: none; " >
     <table>
-   	    <tr class="TEMPLATE-new-backlog-item-form-table-row" data-is-new-item="true" >
-	        <td class="form-field-input" >1</td>
-	        <td class="form-field-input" >
-	            <input type="text" value="Title 1" class="backlog-content-field" ></input>
-	        </td>
-	        <td class="form-field-input" >
-	            <input type="text" value="Description 1" class="backlog-content-field" ></input>
-	        </td>
-	        <td class="form-field-input"  colspan="0" >
-	            <input type="text" value="small" class="backlog-content-field" ><!-- TODO styliezed type ahead/drop down here --></input>
-	        </td>
-	        <td class="form-field-input" >
-	            <input type="text" value="theme 1" class="backlog-content-field" ><!-- TODO styliezed type ahead/drop down here --></input>
-	        </td>
-	        <td class="form-field-input"  class="inline-right-layout" >delete</td>
-	    </tr>
-	</table>
+           <tr id="backlog-item-template" class="form-row form-row-fields" >
+            <td class="form-field-input" >
+                <input type="text" name="priority" value="" class="backlog-item-field" readonly="readonly" ></input>
+            </td>
+            <td class="form-field-input" >
+                <input type="text" name="title" value="" class="backlog-item-field" ></input>
+            </td>
+            <td class="form-field-input" >
+                <input type="text" name="description" value="" class="backlog-item-field" ></input>
+            </td>
+            <td colspan="0" >
+                <input type="text" name="effort" value="" class="backlog-item-field" ></input>
+            </td>
+            <td class="form-field-input" >
+                <input type="text" name="theme" value="" class="backlog-item-field" ></input>
+            </td>
+            <td class="insert-item form-field-action inline-right-layout" >insert</td>
+            <td class="remove-item form-field-action inline-right-layout" >remove</td>
+            <td>
+                <input type="hidden" name="backlog-item-description" ></input>
+            </td>
+        </tr>
+    </table>
 </div>
     </body>
 </html>
