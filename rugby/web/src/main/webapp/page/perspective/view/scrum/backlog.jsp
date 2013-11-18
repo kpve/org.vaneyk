@@ -14,7 +14,7 @@
             (
                 function()
                 {
-               	    var backlogContent = $( '#backlog-content' );
+               	    var backlogContent = $( '#backlog-items' );
                 	
                	    function resetItemPriorities()
                	    {
@@ -79,7 +79,7 @@
                             var newRow = $( "#backlog-item-template" ).clone();
                             newRow.removeAttr( 'id' );
                             newRow.find( 'input:first' ).val( 1 );
-                            newRow.insertBefore( $( "#backlog-content" ).find( '.form-actions' ) );
+                            newRow.insertBefore( $( "#backlog-items" ).find( '.form-actions' ) );
                     }
                 }
             );
@@ -87,16 +87,16 @@
     </head>
     <body>
         <div class="vertical-spacer-center" ></div>
-        <div id="backlog-content" class="form tabular-form" >
+        <div id="backlog-items" class="form tabular-form" >
             <fieldset>
                 <legend>backlog</legend>
                 <table>
                     <tr class="form-row" >
                         <th class="backlog-item-priority"    >priority</th>
                         <th class="backlog-item-title"       >title</th>
-                        <th class="backlog-item-description" >description</th>
-                        <th class="backlog-item-effort"      >effort</th>
                         <th class="backlog-item-theme"       >theme</th>
+                        <th class="backlog-item-effort"      >effort</th>
+                        <th class="backlog-item-description" >description</th>
                         <th class="backlog-item-edit"        ></th>
                     </tr>
                     <tr class="form-row form-actions form-submit-row" >
@@ -117,13 +117,13 @@
                 <input type="text" name="title" value="" class="backlog-item-field" ></input>
             </td>
             <td class="form-field-input" >
-                <input type="text" name="description" value="" class="backlog-item-field" ></input>
+                <input type="text" name="theme" value="" class="backlog-item-field" ></input>
             </td>
             <td colspan="0" >
                 <input type="text" name="effort" value="" class="backlog-item-field" ></input>
             </td>
             <td class="form-field-input" >
-                <input type="text" name="theme" value="" class="backlog-item-field" ></input>
+                <textarea name="description" value="" class="backlog-item-field" ></textarea>
             </td>
             <td class="insert-item form-field-action inline-right-layout" >insert</td>
             <td class="remove-item form-field-action inline-right-layout" >remove</td>

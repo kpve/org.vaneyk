@@ -1,44 +1,51 @@
-#backlog-content
+
+#backlog-items
 {
 	width: 100%;
 }
 
-#backlog-content fieldset
+#backlog-items fieldset
 {
 	width: 100%;
 }
 
-.backlog-content-priority
+.backlog-item-priority
 {
-	width: 5%;
+	width: 2%;
 }
 
-.backlog-content-title
+.backlog-item-title
 {
 	width: 40%;
 }
 
-.backlog-content-estimate
+.backlog-item-estimate
 {
-	width: 7%;
+	width: 5%;
 }
 
-.backlog-content-theme
-{
-	width: 8;
-}
-
-.backlog-content-edit
+.backlog-item-theme
 {
 	width: 10%;
 }
 
-.backlog-content-description
+.backlog-item-edit
 {
-    width: 30%;
+	width: 8%;
 }
 
-.backlog-content-field
+.backlog-item-description
+{
+    width: 35%;
+}
+
+.backlog-item-field
 {
     width: 99%;
+}
+
+#backlog-items textarea
+{
+    margin-top: 0.3em;
+    height: 1.4em;
 }
