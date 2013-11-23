@@ -14,7 +14,7 @@
             (
                 function()
                 {
-               	    var backlogContent = $( '#backlog-items' );
+               	    var backlogContent = $( '#backlog-content' );
                 	
                	    function resetItemPriorities()
                	    {
@@ -79,7 +79,7 @@
                             var newRow = $( "#backlog-item-template" ).clone();
                             newRow.removeAttr( 'id' );
                             newRow.find( 'input:first' ).val( 1 );
-                            newRow.insertBefore( $( "#backlog-items" ).find( '.form-actions' ) );
+                            newRow.insertBefore( $( "#backlog-content" ).find( '.form-actions' ) );
                     }
                 }
             );
@@ -87,7 +87,7 @@
     </head>
     <body>
         <div class="vertical-spacer-center" ></div>
-        <div id="backlog-items" class="form tabular-form" >
+        <div id="backlog-content" class="form tabular-form" >
             <fieldset>
                 <legend>backlog</legend>
                 <table>

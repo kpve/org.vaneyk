@@ -1,10 +1,10 @@
 
-#backlog-items
+#backlog-content
 {
 	width: 100%;
 }
 
-#backlog-items fieldset
+#backlog-content fieldset
 {
 	width: 100%;
 }
@@ -31,7 +31,7 @@
 
 .backlog-item-edit
 {
-	width: 8%;
+	width: 10%;
 }
 
 .backlog-item-description
@@ -44,7 +44,7 @@
     width: 99%;
 }
 
-#backlog-items textarea
+#backlog-content textarea
 {
     margin-top: 0.3em;
     height: 1.4em;
