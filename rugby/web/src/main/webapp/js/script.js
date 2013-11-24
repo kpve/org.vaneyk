@@ -8,7 +8,7 @@ $.fn.clearForm = function()
     (
         function()
         {
-        	var tagName = this.tagName.toLowerCase();
+            var tagName = this.tagName.toLowerCase();
         	
             if( tagName == "input" )
             {

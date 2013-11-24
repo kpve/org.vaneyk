@@ -65,8 +65,7 @@
                             // and update the product search input 
                             if( $( '#scrum-product-menu-product-search-input' ).attr( 'value') != productName )
                             {
-                                //$( '#scrum-product-menu-product-search-input' ).attr( 'value', productName ).change();
-                                $( '#scrum-product-menu-product-search-input' ).val( productName +'~~~~~~~' ).change();
+                                $( '#scrum-product-menu-product-search-input' ).attr( 'value', productName ).change();
                                 $( '#scrum-product-menu-product-search-input' ).trigger( 'change' );
                             }
                         }
