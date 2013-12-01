@@ -90,6 +90,11 @@
         <div id="backlog-content" class="form tabular-form" >
             <fieldset>
                 <legend>backlog</legend>
+                
+TODO 
+  - clean up insert/remove buttons
+  - add drag/drop prioritization
+                
                 <table>
                     <tr class="form-row" >
                         <th class="backlog-item-priority"    >priority</th>

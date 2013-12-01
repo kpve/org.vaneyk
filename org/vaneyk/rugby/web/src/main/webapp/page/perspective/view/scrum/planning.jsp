@@ -61,7 +61,7 @@
 	                    </td>
 	                </tr>
                     <tr>
-                        <td class="sprint-planning-form-non-goals-content" >
+                     <td class="sprint-planning-form-non-goals-content" >
 				            <table>
 				                <tr class="form-row">
 				                    <td>
@@ -103,7 +103,11 @@
                 
                 <br	/>
                 <br />
-                	
+                	                    
+                    
+TODO - make these fields editable and also add drag/drop prioritization                    
+                    
+                    
                 <span class="title" >Backlog</span>
 	            <table id="sprint-planning-backlog-items" >
 	                <tr>
