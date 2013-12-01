@@ -1,0 +1,53 @@
+
+#planning-content
+{
+	     width: 100%;
+	text-align: center;
+}
+
+#planning-content fieldset
+{
+	width: 100%;
+}
+
+.sprint-planning-form-non-goals-content
+{
+	width: 30%;
+}
+
+.sprint-planning-form-goals-content
+{
+             width: 70%;
+	vertical-align: top;
+}
+
+#sprint-planning-form-goals-field-label
+{
+    display: table;
+     margin: auto;
+     height: 
+}
+
+#sprint-goals-field
+{
+        height: 5.5em;
+    margin-top: 0.4em;
+         width: 100%;
+}
+
+#sprint-planning-items
+{
+         width: 100%;
+}
+
+#sprint-planning-backlog-items
+{
+              width: 100%;
+    border-collapse: collapse;
+}
+
+.sprint-planning-commitment-line td
+{
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+

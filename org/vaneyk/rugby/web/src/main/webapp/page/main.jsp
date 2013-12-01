@@ -236,11 +236,11 @@ alert( 'delete me - CHANGE!' );
                         <div data-menu-item="backlog" class="menu-item" >
                             <span class="menu-item-label" >backlog</span>
                         </div>
-                        <div data-menu-item="pre-planning" class="menu-item" >
-                            <span class="menu-item-label" >pre-planning</span>
-                        </div>
-                        <div data-menu-item="planning"     class="menu-item" >
+                        <div data-menu-item="planning" class="menu-item" >
                             <span class="menu-item-label" >planning</span>
+                        </div>
+                        <div data-menu-item="estimation"     class="menu-item" >
+                            <span class="menu-item-label" >estimation</span>
                         </div>
                         <div data-menu-item="daily-scrum"  class="menu-item" >
                             <span class="menu-item-label" >daily-scrum</span>
@@ -259,29 +259,6 @@ alert( 'delete me - CHANGE!' );
                         </div>
                     </div>
                 </div>
-<!-- 
-                <div id="pre-planning-menu" data-menuType="perspective-view" data-view="pre-planning" data-perspective="scrum" data-view="pre-planning" class="menu vertical-sliding-menu inline-right-layout" >
-                    <div id="pre-planning-menu-header" class="menu-header">
-                        <div id="pre-planning-menu-label" class="menu-label" >
-                            pre-planning: <span id="pre-planning-menu-label-value" class="menu-label-value" ></span>
-                        </div>
-                    </div>
-                    <div id="pre-planning-menu-items" class="menu-items vertical-menu-items" >
-                        <div data-menu-item="user"         class="menu-item" >
-                            <span class="menu-item-label" >user</span>
-                        </div>
-                        <div data-menu-item="team"         class="menu-item" >
-                            <span class="menu-item-label" >pre-team</span>
-                        </div>
-                        <div data-menu-item="notification" class="menu-item">
-                            <span class="menu-item-label" >notification</span>
-                        </div>
-                        <div data-menu-item="system"       class="menu-item" >
-                            <span class="menu-item-label" >system</span>
-                        </div>
-                    </div>
-                </div>  
--->
             </div>
             <div id="perspective-content" class="containFloatedChildren" >
             </div>

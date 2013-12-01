@@ -201,3 +201,12 @@ table.data tbody tr:nth-child(even), table.data tbody tr:last-of-type
 {
     margin: 0em auto;
 }
+
+.title
+{
+           display: table;
+         font-size: 150%;
+            margin: auto;
+    padding-bottom: 1em;
+}
+
